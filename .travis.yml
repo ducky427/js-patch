@@ -1,3 +1,4 @@
 
-lein: lein2
+language: clojure
+
 script: lein doo phantom test once
