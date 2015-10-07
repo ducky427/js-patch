@@ -1,0 +1,2 @@
+lein: lein2
+script: lein doo phantom test once
