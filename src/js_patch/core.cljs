@@ -1,7 +1,8 @@
 (ns js-patch.core
   (:require-macros [js-patch.core :refer [js-array-map js-array-concat js-array-every
                                           js-array-filter js-array-forEach
-                                          js-array-indexOf js-array-join]]))
+                                          js-array-indexOf js-array-join]])
+  (:require [clojure.string]))
 
 (defn initialize!
   []
