@@ -8,7 +8,8 @@
            (fn [~f]
              (core/this-as this#
                            (into (empty this#)
-                                 (map-indexed #(~f %2 %1 this#) this#)))))))
+                                 (map-indexed #(~f %2 %1 this#))
+                                 this#))))))
 
 (defmacro js-array-concat
   [ty]
