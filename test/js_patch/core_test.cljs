@@ -77,3 +77,8 @@
 (deftest test-reverse
   (testing "Testing reverse"
     (is (= [0 1 2] (.reverse [2 1 0])))))
+
+(deftest test-some
+  (testing "Testing some"
+    (is (false? (.some [2 5 8 1 4] (fn [x] (>= x 10)))))
+    (is (true? (.some [12 5 8 1 4] (fn [x] (>= x 10)))))))

@@ -172,3 +172,16 @@
            (core/this-as this#
                          (into (empty this#)
                                (reverse this#))))))
+
+;; https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+(defmacro js-array-some
+  [ty]
+  `(aset (.-prototype ~ty) "some"
+         (fn [f#]
+           (core/this-as this#
+                         (let [r#  (some (fn [[idx# x#]]
+                                           (f# x# idx# this#))
+                                         (map-indexed vector this#))]
+                           (if (nil? r#)
+                             false
+                             r#))))))
