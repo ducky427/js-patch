@@ -20,6 +20,9 @@
               :source-paths ["src" "test"]
               :compiler {:optimizations :none
                          :main js-patch.runner
+                         :cache-analysis true
+                         :static-fns true
+                         :pretty-print true
                          :output-to "resources/public/js/compiled/testable.js"}}]}
 
   )

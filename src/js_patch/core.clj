@@ -89,3 +89,29 @@
            (fn [~s]
              (core/this-as this#
                            (clojure.string/join (or ~s ",") this#))))))
+
+;; https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/lastIndexOf
+(defmacro js-array-lastIndexOf
+  [ty]
+  (let [s  (gensym)
+        f  (gensym)
+        c  (gensym)
+        i  (gensym)]
+    `(aset (.-prototype ~ty) "lastIndexOf"
+           (fn [~s ~f]
+             (core/this-as this#
+                           (let [~c  (count this#)
+                                 ~f  (or ~f (dec ~c))
+                                 ~f  (if (>= ~f 0)
+                                       (min ~f (dec ~c))
+                                       (+ ~c
+                                          ~f))]
+                             (cond
+                               (>= ~f ~c)   -1
+                               :else        (or
+                                             (first
+                                              (keep (fn [~i]
+                                                      (when (= (nth this# ~i) ~s)
+                                                        ~i))
+                                                    (reverse (range (inc ~f)))))
+                                             -1))))))))

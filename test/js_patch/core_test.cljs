@@ -50,3 +50,12 @@
       (is (= "Wind, Rain, Fire" (.join a ", ")))
       (is (= "Wind + Rain + Fire" (.join a " + ")))
       (is (= "WindRainFire" (.join a ""))))))
+
+(deftest test-lastIndexOf
+  (testing "Testing lastIndexOf"
+    (is (= 3 (.lastIndexOf [2 5 9 2] 2)))
+    (is (= -1 (.lastIndexOf [2 5 9 2] 7)))
+    (is (= 3 (.lastIndexOf [2 5 9 2] 2 3)))
+    (is (= 0 (.lastIndexOf [2 5 9 2] 2 2)))
+    (is (= 0 (.lastIndexOf [2 5 9 2] 2 -2)))
+    (is (= 3 (.lastIndexOf [2 5 9 2] 2 -1)))))
