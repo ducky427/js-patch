@@ -82,3 +82,9 @@
   (testing "Testing some"
     (is (false? (.some [2 5 8 1 4] (fn [x] (>= x 10)))))
     (is (true? (.some [12 5 8 1 4] (fn [x] (>= x 10)))))))
+
+(deftest test-missing
+  (testing "Testing missing functions call"
+    (is (thrown-with-msg? js/Error #"sort is not implemented" (.sort [1 2 3])))
+    (is (thrown-with-msg? js/Error #"pop is not implemented" (.pop [1 2 3])))
+    (is (thrown-with-msg? js/Error #"push is not implemented" (.push [1 2 3] 4)))))

@@ -185,3 +185,10 @@
                            (if (nil? r#)
                              false
                              r#))))))
+
+(defmacro js-array-throw-missing
+  [ty n]
+  `(aset (.-prototype ~ty) ~n
+         (fn []
+           (core/this-as this#
+                         (throw (js/Error. (str ~n " is not implemented")))))))
