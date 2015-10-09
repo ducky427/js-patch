@@ -1,16 +1,6 @@
 (ns js-patch.core
   (:require [cljs.core :as core]))
 
-(defmacro js-array-map
-  [ty]
-  (let [f  (gensym)]
-    `(aset (.-prototype ~ty) "map"
-           (fn [~f]
-             (core/this-as this#
-                           (into (empty this#)
-                                 (map-indexed #(~f %2 %1 this#))
-                                 this#))))))
-
 (defmacro js-array-concat
   [ty]
   (let [args (gensym)]
@@ -115,3 +105,70 @@
                                                         ~i))
                                                     (reverse (range (inc ~f)))))
                                              -1))))))))
+
+;; https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
+(defmacro js-array-map
+  [ty]
+  (let [f  (gensym)]
+    `(aset (.-prototype ~ty) "map"
+           (fn [~f]
+             (core/this-as this#
+                           (into (empty this#)
+                                 (map-indexed #(~f %2 %1 this#))
+                                 this#))))))
+
+;; https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
+(defmacro js-array-reduce
+  [ty]
+  (let [f    (gensym)
+        i    (gensym)
+        prev (gensym)
+        idx  (gensym)
+        val  (gensym)]
+    `(aset (.-prototype ~ty) "reduce"
+           (fn [~f ~i]
+             (core/this-as this#
+                           (if (nil? ~i)
+                             (reduce (fn [~prev [~idx ~val]]
+                                       (if (= 1 ~idx)
+                                         (~f (last ~prev) ~val ~idx this#)
+                                         (~f ~prev ~val ~idx this#)))
+                                     (map-indexed vector this#))
+                             (reduce (fn [~prev [~idx ~val]]
+                                       (~f ~prev ~val ~idx this#))
+                                     ~i
+                                     (map-indexed vector this#))))))))
+
+
+;; https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/ReduceRight
+(defmacro js-array-reduceRight
+  [ty]
+  (let [f    (gensym)
+        i    (gensym)
+        prev (gensym)
+        idx  (gensym)
+        val  (gensym)
+        c    (gensym)]
+    `(aset (.-prototype ~ty) "reduceRight"
+           (fn [~f ~i]
+             (core/this-as this#
+                           (if (nil? ~i)
+                             (let [~c  (- (count this#) 2)]
+                               (reduce (fn [~prev [~idx ~val]]
+                                         (if (= ~c ~idx)
+                                           (~f (last ~prev) ~val ~idx this#)
+                                           (~f ~prev ~val ~idx this#)))
+                                       (reverse (map-indexed vector this#))))
+                             (reduce (fn [~prev [~idx ~val]]
+                                       (~f ~prev ~val ~idx this#))
+                                     ~i
+                                     (reverse (map-indexed vector this#)))))))))
+
+;; https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse
+(defmacro js-array-reverse
+  [ty]
+  `(aset (.-prototype ~ty) "reverse"
+         (fn []
+           (core/this-as this#
+                         (into (empty this#)
+                               (reverse this#))))))

@@ -59,3 +59,21 @@
     (is (= 0 (.lastIndexOf [2 5 9 2] 2 2)))
     (is (= 0 (.lastIndexOf [2 5 9 2] 2 -2)))
     (is (= 3 (.lastIndexOf [2 5 9 2] 2 -1)))))
+
+(deftest test-reduce
+  (testing "Testing reduce"
+    (is (= 10 (.reduce [0 1 2 3 4] (fn [x y] (+ x y)))))
+    (is (= [0 1 2 3 4] (.reduce [0 1 2 3 4] (fn [x y] (conj x y)) [])))
+    (is (= 20 (.reduce [0 1 2 3 4] (fn [x y z] (+ x y z)))))
+    (is (= 20 (.reduce [0 1 2 3 4] (fn [x y] (+ x y)) 10)))))
+
+(deftest test-reduceRight
+  (testing "Testing reduceRight"
+    (is (= 10 (.reduceRight [0 1 2 3 4] (fn [x y] (+ x y)))))
+    (is (= [4 3 2 1 0] (.reduceRight [0 1 2 3 4] (fn [x y] (conj x y)) [])))
+    (is (= 16 (.reduceRight [0 1 2 3 4] (fn [x y z] (+ x y z)))))
+    (is (= 20 (.reduceRight [0 1 2 3 4] (fn [x y] (+ x y)) 10)))))
+
+(deftest test-reverse
+  (testing "Testing reverse"
+    (is (= [0 1 2] (.reverse [2 1 0])))))
